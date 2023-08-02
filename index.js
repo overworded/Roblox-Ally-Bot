@@ -37,25 +37,28 @@ const RequestAlly = async (ID) => new Promise(async resolve => {
   .proxy(Config.RotatingProxy)
   .then(resp => {print(Colors.Green, ID, `Sent ally request.`); resolve(true);})
   .catch(async err => {
-    if (!err || !err.response)
-        return resolve(RequestAlly(ID));
-    const {body} = err.response;
+    const body = err.response;
+    if (!err || !body) return resolve(RequestAlly(ID));
     const newxcsrf = err.response.headers['x-csrf-token'];
     if (newxcsrf) {
         Globals.XCSRF = newxcsrf || Globals.XCSRF;
         print(Colors.Magenta, ID, `Updated XCSRF token to "${Globals.XCSRF}".`);
         return resolve(await RequestAlly(ID));
     }
-    if (body.errors[0].message == "Too many requests") {
+    if (body) {
+      if (body.status === 429) {
         print(Colors.Red, ID, `Ratelimited, trying again in 15 seconds.`)
         await sleep(15000);
         return resolve(await RequestAlly(ID));
-    }
-    if (body.errors[0].code === 7) {
-        print(Colors.Blue, ID, `Already have a relationship.`);
+      }
+      else if (body.status === 400) {
+        print(Colors.Blue, ID, `Already has a relationship with this group.`);
         return resolve();
+      }
     }
-    print(Colors.Red, ID, `Failed to ally because "${body.errors[0].message}".`);
+    else {
+      print(Colors.Red, ID, `Failed to ally, no information recieved.`);
+    }
     resolve();
   });
 });
