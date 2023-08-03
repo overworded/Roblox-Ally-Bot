@@ -65,7 +65,6 @@ const RequestAlly = async (ID) => new Promise(async resolve => {
 
 const Main = async (ID) => {
   await RequestAlly(ID);
-  await sleep(1000);
   Globals.CurrentID++;
   Main(Globals.CurrentID);
 }
