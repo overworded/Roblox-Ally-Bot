@@ -1,5 +1,6 @@
 const superagent = require('superagent');
 require('superagent-proxy')(superagent);
+const fs = require('fs');
 
 const Config = {
   GroupID: 69696969, // your group id.
@@ -7,9 +8,8 @@ const Config = {
   RotatingProxy: 'http://...', // rotating proxy (webshare).
   Cookie: '_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_...', // roblosecurity cookie.
 }
-
 let Globals = {
-  CurrentID: Config.StartingID,
+  Current: Config.StartingID,
   XCSRF: null,
 }
 
@@ -30,12 +30,24 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const print = (Color, ID, Message) => {
   console.log(`${Colors.Yellow}[${new Date().toLocaleTimeString()}]${Colors.Reset} | ${Colors.Cyan}ID: ${ID}${Colors.Reset} | ${Color}${Message}${Colors.Reset}`);
 }
+
+let Data = JSON.parse(fs.readFileSync('./data.json'));
+
+if (Config.StartingID < Data.Current) {
+  Globals.Current = Data.Current;
+  print(Colors.Magenta, Globals.Current, `Loaded ID from previous session.`);
+}
+
 const RequestAlly = async (ID) => new Promise(async resolve => {
   superagent('POST', URL+ID)
   .set('x-csrf-token', Globals.XCSRF)
   .set('cookie', `.ROBLOSECURITY=${Config.Cookie}`)
   .proxy(Config.RotatingProxy)
-  .then(resp => {print(Colors.Green, ID, `Sent ally request.`); resolve(true);})
+  .then(resp => {
+    print(Colors.Green, ID, `Sent ally request.`); resolve(true);
+    // add ID to the Data.Sent array and save it to the file
+    Data.Sent.push(ID);
+  })
   .catch(async err => {
     const body = err.response;
     if (!err || !body) return resolve(RequestAlly(ID));
@@ -52,7 +64,8 @@ const RequestAlly = async (ID) => new Promise(async resolve => {
         return resolve(await RequestAlly(ID));
       }
       else if (body.status === 400) {
-        print(Colors.Blue, ID, `Already has a relationship with this group.`);
+        print(Colors.Blue, ID, `Already have a relationship with this group.`);
+        Data.Sent.push(ID);
         return resolve();
       }
     }
@@ -64,9 +77,18 @@ const RequestAlly = async (ID) => new Promise(async resolve => {
 });
 
 const Main = async (ID) => {
-  await RequestAlly(ID);
-  Globals.CurrentID++;
-  Main(Globals.CurrentID);
+  if (Data.Sent.indexOf(ID) > -1) {
+    print(Colors.Blue, ID, `Already sent ally request to this group.`);
+  }
+  else {
+    await RequestAlly(ID);
+  }
+
+  Globals.Current++;
+  Data.Current = Globals.Current;
+
+  fs.writeFileSync('./data.json', JSON.stringify(Data));
+  Main(Globals.Current);
 }
 
-Main(Globals.CurrentID);
+Main(Globals.Current);
