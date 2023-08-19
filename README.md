@@ -1,5 +1,6 @@
 # Roblox Ally Bot
-- Automatically send ally requests to groups on roblox.
+- Automatically send ally requests to groups on Roblox.
+- Able to run 24/7 with no ineruptions issues.
 - Easy to read console.
 - Proxy support.
 
@@ -10,7 +11,7 @@
 - Open 'index.js' in your editor of choice (notepad works) and fill in the config section.
 - Run 'index.js' and watch the magic happen.
 
-> sorry for the bad documentation, this is only really meant for people who know how to use it.
+> Sorry for the bad documentation, this is only meant for people who know how to use it.
 
 # Showcase
 ![Console outputs of the bot running.](https://github.com/overworded/Roblox-Ally-Bot/assets/75399033/82830453-ca34-4b95-bd22-3d94315b132f)
