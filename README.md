@@ -11,3 +11,7 @@
 - Run 'index.js' and watch the magic happen.
 
 > sorry for the bad documentation, this is only really meant for people who know how to use it.
+
+# Showcase
+![Console outputs of the bot running.](https://github.com/overworded/Roblox-Ally-Bot/assets/75399033/82830453-ca34-4b95-bd22-3d94315b132f)
+![Group audit logs while running bot.](https://github.com/overworded/Roblox-Ally-Bot/assets/75399033/adce3d1a-32f5-47b9-a0dc-6d9a82c8b00b)
