@@ -45,7 +45,6 @@ const RequestAlly = async (ID) => new Promise(async resolve => {
   .proxy(Config.RotatingProxy)
   .then(resp => {
     print(Colors.Green, ID, `Sent ally request.`); resolve(true);
-    // add ID to the Data.Sent array and save it to the file
     Data.Sent.push(ID);
   })
   .catch(async err => {
