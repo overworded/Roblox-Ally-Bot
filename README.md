@@ -1,6 +1,6 @@
 # Roblox Ally Bot
 - Automatically send ally requests to groups on Roblox.
-- Able to run 24/7 with no ineruptions issues.
+- Able to run 24/7 with no ineruptions or issues.
 - Easy to read console.
 - Proxy support.
 
