@@ -49,7 +49,7 @@ const RequestAlly = async (ID) => new Promise(async resolve => {
   })
   .catch(async err => {
     const body = err.response;
-    if (!err || !body) return resolve(RequestAlly(ID));
+    if (!err || !body) return resolve(await RequestAlly(ID));
     const newxcsrf = err.response.headers['x-csrf-token'];
     if (newxcsrf) {
         Globals.XCSRF = newxcsrf || Globals.XCSRF;
